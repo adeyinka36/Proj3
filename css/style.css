@@ -221,3 +221,9 @@ option {
 	width: 100%;
 	border-radius: 5px;
 }
+/* Below is the styling for error messages  */
+.error{
+	text-align: center;
+	border: thick solid red;
+	display:none
+}
