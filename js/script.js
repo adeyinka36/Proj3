@@ -1,3 +1,5 @@
+// The email entry is where i implemented the realtime validation
+// The unique erromessages is implemented in credicard number section
 const name_label = document.getElementById("name_label");
 const other_option = document.getElementById("other_option");
 const other_title = document.getElementById("other-title");
@@ -65,6 +67,8 @@ function initialFunctionalities() {
         let input_value = roleSelectOption.options[roleSelectOption.selectedIndex].value
         if (input_value == "other") {
             other_title.style.display = "block"
+        } else {
+            other_title.style.display = "none"
         }
     })
     for (i = 0; i < inputElements.length; i++) {
@@ -73,7 +77,7 @@ function initialFunctionalities() {
         }
     }
     for (i = 0; i < checkBoxes.length; i++) {
-        checkBoxes[i].addEventListener("click", manageCheckBoxes)
+        checkBoxes[i].addEventListener("click", newCheckboxAntiClash)
     }
 }
 
@@ -136,63 +140,6 @@ function checkedBoxes(val) {
     if (val.checked == true) {
         return val
     }
-
-}
-// this function ensures that the checkbox times dont clash 
-function manageCheckBoxes(e) {
-    let clashingSlot1 = [checkBoxes[1], checkBoxes[3], checkBoxes[5]]
-    let clashingSlot2 = [checkBoxes[2], checkBoxes[4], checkBoxes[6]]
-    let selected
-    let selected2
-    for (i = 0; i < clashingSlot1.length; i++) {
-        clashingSlot1[i].disabled = true
-        if (clashingSlot1[i].checked) {
-
-            selected = clashingSlot1[i]
-
-        }
-    }
-
-    if (selected != undefined) {
-
-        selected.disabled = false
-    } else {
-        for (i = 0; i < clashingSlot1.length; i++) {
-            clashingSlot1[i].disabled = false
-        }
-    }
-
-    // second clashing group
-    for (i = 0; i < clashingSlot2.length; i++) {
-        clashingSlot2[i].disabled = true
-        if (clashingSlot2[i].checked) {
-
-            selected2 = clashingSlot2[i]
-
-        }
-    }
-
-    if (selected2 != undefined) {
-
-        selected2.disabled = false
-    } else {
-        for (i = 0; i < clashingSlot2.length; i++) {
-            clashingSlot2[i].disabled = false
-        }
-    }
-
-
-
-    let checked = checkBoxes.filter(checkedBoxes)
-    var valueForTotal = 0
-    for (i = 0; i < checked.length; i++) {
-        valueForTotal += Number(checked[i].getAttribute("data-cost"))
-    }
-    total.innerText = `Your Total is : $${valueForTotal}`
-    if (activitiesDiv[0].lastChild.tagName != "DIV") {
-        activitiesDiv[0].appendChild(total)
-    }
-
 
 }
 
@@ -271,7 +218,7 @@ function checkCreditCardNumber() {
         document.getElementById("ccError").innerText = "Please enter a number no longer than 16 digits"
         return false
     }
-    if (typeof creditCardNum.value != "number") {
+    if (typeof Number(creditCardNum.value) != "number") {
         document.getElementById("ccError").style.display = "block"
         document.getElementById("ccError").innerText = "Please enter a number "
         return false
@@ -280,7 +227,7 @@ function checkCreditCardNumber() {
 // checking zip code is valide
 function checkZipIsValid() {
     let zipCode = document.getElementById("zip")
-    if (zipCode.valuelength != 5) {
+    if (zipCode.value.length != 5) {
         document.getElementById("zipError").style.display = "block"
         return false
     }
@@ -352,4 +299,38 @@ function showErrorMessages() {
     for (i = 0; i < errorDivs.length; i++) {
         errorDivs[i].style.display = "block"
     }
+}
+
+//This function prevents user from picking clashng
+function newCheckboxAntiClash(e) {
+    for (i = 0; i < checkBoxes.length; i++) {
+        if (e.target.checked) {
+            if (e.target.getAttribute("data-day-and-time") == checkBoxes[i].getAttribute("data-day-and-time")) {
+                checkBoxes[i].disabled = true
+            }
+            e.target.disabled = false
+        } else {
+            if (e.target.getAttribute("data-day-and-time") == checkBoxes[i].getAttribute("data-day-and-time")) {
+                checkBoxes[i].disabled = false
+            }
+
+        }
+
+    }
+    let checked = checkBoxes.filter(checkedBoxes)
+    var valueForTotal = 0
+    for (i = 0; i < checked.length; i++) {
+        valueForTotal += Number(checked[i].getAttribute("data-cost"))
+    }
+    total.innerText = `Your Total is : $${valueForTotal}`
+    if (activitiesDiv[0].lastChild.tagName != "DIV") {
+        activitiesDiv[0].appendChild(total)
+    }
+
+    if (valueForTotal > 0) {
+        total.style.display = "block"
+    } else {
+        total.style.display = "none"
+    }
+
 }
