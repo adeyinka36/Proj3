@@ -16,6 +16,15 @@ const signUpForm = document.getElementById("signUpForm")
 const errorDivs = document.getElementsByClassName("error")
 const colorDiv = document.getElementById("colors-js-puns")
 
+designSelectOption.addEventListener("change",(e)=>{
+    let inputColor= colorsOptions.options[colorsOptions.selectedIndex].value
+    if(designSelectOption.value=="js puns"){
+        colorsOptions.options[0].selected=true
+    }
+    else if(designSelectOption.value=="heart js"){
+        colorsOptions.options[3].selected=true
+    }
+})
 
 designSelectOption.addEventListener("change", themeSelection)
 document.addEventListener("load", initialFunctionalities())
@@ -205,7 +214,9 @@ function checkEmailIsValid(email) {
 // This function checks that the credit card details provided are valid
 function checkCreditCardNumber() {
 
+     
     let creditCardNum = document.getElementById("cc-num")
+    let check=/^[0-9]+$/
 
     if (creditCardNum.value.length < 13) {
         document.getElementById("ccError").style.display = "block"
@@ -218,16 +229,25 @@ function checkCreditCardNumber() {
         document.getElementById("ccError").innerText = "Please enter a number no longer than 16 digits"
         return false
     }
-    if (typeof Number(creditCardNum.value) != "number") {
+    if (!creditCardNum.value.match(check)) {
         document.getElementById("ccError").style.display = "block"
         document.getElementById("ccError").innerText = "Please enter a number "
         return false
     }
+    
+    return true
 }
 // checking zip code is valide
 function checkZipIsValid() {
+    let check=/^[0-9]+$/
     let zipCode = document.getElementById("zip")
+    let zipNum= zipCode.value
     if (zipCode.value.length != 5) {
+        document.getElementById("zipError").style.display = "block"
+        return false
+    }
+    if(!zipCode.value.match(check)){
+        console.log(typeof zipNum)
         document.getElementById("zipError").style.display = "block"
         return false
     }
@@ -235,8 +255,14 @@ function checkZipIsValid() {
 }
 
 function checkCvvIsValid() {
+    let check=/^[0-9]+$/
     let cvv = document.getElementById("cvv")
+    let cvvNum= cvv.value
     if (cvv.value.length != 3) {
+        document.getElementById("cvvError").style.display = "block"
+        return false
+    }
+    if(!cvv.value.match(check)){
         document.getElementById("cvvError").style.display = "block"
         return false
     }
@@ -270,7 +296,6 @@ function formValidation(e) {
         let nameFieldResult = nameValidation()
         let emailFieldResult = checkEmailIsValid(document.getElementById("mail").value)
         let boxFieldResult = checkBoxValidation()
-
         let creditCardFieldResult = checkCreditCardNumber()
         let zipCodeFieldResult = checkZipIsValid()
         let cvvFieldResult = checkCvvIsValid()
@@ -278,7 +303,6 @@ function formValidation(e) {
             return signUpForm.submit()
         }
     } else {
-        console.log("yaii")
         let nameFieldResult = nameValidation()
         let emailFieldResult = checkEmailIsValid(document.getElementById("mail").value)
         let boxFieldResult = checkBoxValidation()
