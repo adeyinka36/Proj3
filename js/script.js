@@ -348,6 +348,7 @@ function newCheckboxAntiClash(e) {
     }
     total.innerText = `Your Total is : $${valueForTotal}`
     if (activitiesDiv[0].lastChild.tagName != "DIV") {
+        total.id="total"
         activitiesDiv[0].appendChild(total)
     }
 

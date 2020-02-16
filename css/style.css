@@ -227,3 +227,8 @@ option {
 	border: thick solid red;
 	display:none
 }
+#total{
+	text-align: center;
+	border:5px solid darkslategray;
+	border-radius: 5px;
+}
